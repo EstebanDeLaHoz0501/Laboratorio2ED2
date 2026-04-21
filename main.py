@@ -10,6 +10,7 @@ adyacencia = listaAdyacencia("flights/flights_final.csv")
 
 mapa = folium.Map(location=[0, 0], zoom_start=2)
 
+#que quede casi vacio el main
 for aeropuerto in aereopuertos.values():
     folium.Marker(
         location=[aeropuerto.lat, aeropuerto.lon],

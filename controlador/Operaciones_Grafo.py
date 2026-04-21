@@ -6,6 +6,7 @@ from modelos import lista_info_aeropuertos
 from collections import deque
 
 #puse las funciones aca para no tener todo en el main :/
+
 class operaciones_grafo:
     def __init__(self, ruta_csv: str):
 
@@ -13,20 +14,18 @@ class operaciones_grafo:
         self.adyacencia = lista_info_aeropuertos.lista_info_airport(ruta_csv)
 
 
-    def mayor_CompConex():
-        mayor = max(listaComponentes, key=len)
-        mayorComp = {}
-        for n in mayor:
-            vecinosEnMayor = []
-            for v,p in adyacencia[n]:
-                if(v in mayor):
-                    vecinosEnMayor.append((v,p))
-            mayorComp[n]=vecinosEnMayor
-        return mayorComp
+    def mayor_Comp_Conex(self):
+        componentes = self.lista_componentes()
+        mayor = []
+        for componente in componentes:
+            if len(componente) > len(mayor):
+                mayor = componente
 
-    def bipartito(adyacencia):
+        return mayor
+
+    def bipartito(self):
         conjuntos = {}  
-        for nodo in adyacencia:
+        for nodo in self.adyacencia:
             if nodo not in conjuntos:
                 
                 cola = deque([nodo])
@@ -35,7 +34,7 @@ class operaciones_grafo:
                 while cola:
                     actual = cola.popleft()
 
-                    for vecino, i in adyacencia[actual]:
+                    for vecino, i in self.adyacencia[actual]:
                         if vecino not in conjuntos:
                             #asigna el color opuesto
                             conjuntos[vecino] = 1 - conjuntos[actual]
@@ -46,18 +45,35 @@ class operaciones_grafo:
 
         return True
 
+    #dfs para lo del arbol
+    def dfs_aux(self, visitado:list, s, resultado:list, adjacencia: list):
+        visitado[s] = True
+        resultado.append(s)
 
+        for i in adjacencia[s]:
+            if not visitado[i]:
+                self.dfs_aux(visitado,i, resultado, adjacencia)
+        pass
+    
+    def dfs(self):
+        visitado = [False]*len(self.adyacencia)
+        resultado = []
+
+        self.dfs_aux(visitado, 0, resultado, self.adyacencia)
+
+        return resultado
+    
     #no estoy segura de esto, habra que cambiarlo
-    def arbol_expansion_minima(lista_adyacencia, punto_inicio: int):
+    def arbol_expansion_minima(self, punto_inicio: int):
         cola =[]
 
         #lista de los valores, todos inicializados como "infinito"
-        key = [float("inf")]*lista_adyacencia.size()
+        key = [float("inf")]*len(self.adyacencia)
 
-        parent = [-1] * lista_adyacencia.size()
+        parent = [-1] * self.adyacencia.size()
 
         #para tomar nota de los que ya estan en el arbol
-        en_arbol = [False] * lista_adyacencia.size()
+        en_arbol = [False] * self.adyacencia.size()
 
         heapq.heappush(cola, (0, punto_inicio))
         key[punto_inicio] = 0
@@ -71,8 +87,8 @@ class operaciones_grafo:
                 #lo mete al arbol
                 en_arbol[u] = True  
 
-                # revisa los vertices adjacentes al vertice
-                for v, peso in lista_adyacencia[u]:
+                # NO entendi como se organizo el peso en la lista, hay que cambiar eso
+                for v, peso in self.adyacencia[u]:
                     # If v is not in MST and the weight of (u, v) is smaller than the current key of v
                     if not en_arbol[v] and key[v] > peso:
 
@@ -81,15 +97,18 @@ class operaciones_grafo:
                         parent[v] = u
 
     #regresa lista de componentes 
-    def lista_componentes(lista_adyacencia):
-        num_vectores = len(lista_adyacencia)
+    def lista_componentes(self):
+        num_vectores = len(self.adyacencia)
         visitados = [False] * num_vectores
         componentes = []
 
-        for i in range(V):
+        for i in range(num_vectores):
             if not visitados[i]:
                 componente = []
-                dfs(lista_adyacencia, visitados, i, componente)
+                dfs(self.adyacencia, visitados, i, componente)
                 componentes.append(componente)
 
         return componentes
+    
+    def mst_de_los_componentes(self):
+        pass
