@@ -2,11 +2,11 @@ import folium
 from flights.dataLoader import cargar_datos
 from flights.dataLoader import listaAdyacencia
 from collections import deque
+
+#carga el mapa
 aereopuertos = cargar_datos("flights/flights_final.csv")
 adyacencia = listaAdyacencia("flights/flights_final.csv")
-# print(len(aereopuertos))
-# print(len(adyacencia))
-# print(adyacencia["NRT"])
+
 
 mapa = folium.Map(location=[0, 0], zoom_start=2)
 
