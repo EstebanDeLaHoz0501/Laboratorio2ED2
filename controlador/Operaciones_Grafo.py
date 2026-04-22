@@ -86,36 +86,43 @@ class operaciones_grafo:
 
         return resultado
     
-    #no estoy segura de esto, habra que cambiarlo
-    def peso_arbol_expansion_minima(self, clave_inicial: int):
+    def peso_arbol_expansion_minima(self, lista_adyacencia: dict):
+        
         peso_arbol = 0
         numero_vertices = len(self.adyacencia)
         visitados = set()
-        #[punto, costo]
+
+        primer_clave_lista  = next(iter(lista_adyacencia))
+
+        #[id aeropuerto, distancia]
         minHeap = [[0,0]]
 
+        #mq no se hayan visitado todos
         while len(visitados) < numero_vertices:
             codigo, distancia = heapq.heappop(minHeap)
+
+            #si ya se visito, se salta
             if codigo in visitados:
                 continue
-            res += distancia
+
+            peso_arbol += distancia
 
             visitados.add(codigo)
 
+            #por cada combo [codigo, distancia] en el valor del aeropuerto se meten los que no han pasado
             for vecino, cost_vecino in self.adyacencia[codigo]:
                 if vecino not in visitados:
                     heapq.heappush(minHeap, [vecino, cost_vecino])
 
-        return res
+        return peso_arbol
 
-        pass
-
-    
-    
+        
+    #regresa el peso de los componentes en una lista
     def mst_de_los_componentes(self):
         componentes = self.lista_componentes()
         mst_componentes = []
 
         for componente in componentes:
-            arbol = self.arbol_expansion_minima
-        pass
+            mst_componentes.append(self.peso_arbol_expansion_minima(componente))
+        
+        return mst_componentes

@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import pandas as pd
 import math
 from modelos.Aereopuerto import Aereopuerto
@@ -11,7 +12,8 @@ class lista_adj_airport:
 
 def lista_adyacencia(ruta: str):
     df = pd.read_csv(ruta)
-    adyacencia = {}  
+    #lo cambie a esto para poder acceder al 
+    adyacencia = {}
     for i, row in df.iterrows():
         codeO = row["Source Airport Code"].strip().upper()
         codeD = row["Destination Airport Code"].strip().upper()
