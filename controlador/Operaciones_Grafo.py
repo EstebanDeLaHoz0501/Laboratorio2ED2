@@ -13,26 +13,31 @@ class operaciones_grafo:
         self.aereopuertos = lista_adj_aeropuertos.lista_adj_airport(ruta_csv)
         self.adyacencia = lista_info_aeropuertos.lista_info_airport(ruta_csv)
 
+    #obtiene los ids de los vertices que estan dentro del componente conexo
+    def dfs_componentes(self, vertice: int, visitados, ids_componente: list):
 
-    def dfs_componentes(self, vertice, visitados, componente):
         visitados.add(vertice)
-        componente.append(vertice)
+        ids_componente.append(vertice)
+
         #puesto asi porque adyacencia es un diccionario 
-        for vecino, i in self.adyacencia[vertice]:
-            if vecino not in visitados:
-                self.dfs_componentes(vecino, visitados, componente)
+        for vertices_adyacentes in self.adyacencia[vertice]:
+            if vertices_adyacentes[0] not in visitados:
+                self.dfs_componentes(vertices_adyacentes[0], visitados, ids_componente)
 
 
     def componentes_conexas(self):
         visitados = set()
+        #lista de diccionarios
         componentes = []
 
         for nodo in self.adyacencia:
             if nodo not in visitados:
-                componente = []
-                self.dfs_componentes(nodo, visitados, componente)
-
-                componentes.append(componente)
+                ids_del_componente = []
+                self.dfs_componentes(nodo, visitados, ids_del_componente)
+                
+                #crea un diccionario con los aeropuertos del componente conexo para poder hacer el mismo algoritmo de mst
+                dict_componentes = {k: self.adyacencia[k] for k in ids_del_componente}
+                componentes.append(dict_componentes)
 
         return componentes
 
@@ -86,6 +91,7 @@ class operaciones_grafo:
 
         return resultado
     
+    #creo que esta listo
     def peso_arbol_expansion_minima(self, lista_adyacencia: dict):
         
         peso_arbol = 0
@@ -117,7 +123,7 @@ class operaciones_grafo:
         return peso_arbol
 
         
-    #regresa el peso de los componentes en una lista
+    #regresa el peso de los componentes en una lista en orden de los componentes conexos
     def mst_de_los_componentes(self):
         componentes = self.lista_componentes()
         mst_componentes = []
