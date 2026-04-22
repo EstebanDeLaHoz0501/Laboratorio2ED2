@@ -14,16 +14,39 @@ class operaciones_grafo:
         self.adyacencia = lista_info_aeropuertos.lista_info_airport(ruta_csv)
 
 
-    def mayor_Comp_Conex(self):
-        componentes = self.lista_componentes()
-        mayor = []
-        for componente in componentes:
-            if len(componente) > len(mayor):
-                mayor = componente
+    def dfs_componentes(self, vertice, visitados, componente):
+        visitados.add(vertice)
+        componente.append(vertice)
+        #puesto asi porque adyacencia es un diccionario 
+        for vecino, i in self.adyacencia[vertice]:
+            if vecino not in visitados:
+                self.dfs_componentes(vecino, visitados, componente)
 
-        return mayor
 
-    def bipartito(self):
+    def componentes_conexas(self):
+        visitados = set()
+        componentes = []
+
+        for nodo in self.adyacencia:
+            if nodo not in visitados:
+                componente = []
+                self.dfs_componentes(nodo, visitados, componente)
+
+                componentes.append(componente)
+
+        return componentes
+
+
+    def mayor_Comp_Conex(self): 
+            componentes = self.lista_componentes()
+            mayor = []
+            for componente in componentes:
+                if len(componente) > len(mayor):
+                    mayor = componente
+
+            return mayor
+
+    def es_bipartito(self):
         conjuntos = {}  
         for nodo in self.adyacencia:
             if nodo not in conjuntos:
@@ -46,10 +69,10 @@ class operaciones_grafo:
         return True
 
     #dfs para lo del arbol
-    def dfs_aux(self, visitado:list, s, resultado:list, adjacencia: list):
+    def dfs_aux(self, visitado:list, s, resultado:dict, adjacencia:dict):
         visitado[s] = True
         resultado.append(s)
-
+        
         for i in adjacencia[s]:
             if not visitado[i]:
                 self.dfs_aux(visitado,i, resultado, adjacencia)
@@ -64,51 +87,35 @@ class operaciones_grafo:
         return resultado
     
     #no estoy segura de esto, habra que cambiarlo
-    def arbol_expansion_minima(self, punto_inicio: int):
-        cola =[]
+    def peso_arbol_expansion_minima(self, clave_inicial: int):
+        peso_arbol = 0
+        numero_vertices = len(self.adyacencia)
+        visitados = set()
+        #[punto, costo]
+        minHeap = [[0,0]]
 
-        #lista de los valores, todos inicializados como "infinito"
-        key = [float("inf")]*len(self.adyacencia)
+        while len(visitados) < numero_vertices:
+            codigo, distancia = heapq.heappop(minHeap)
+            if codigo in visitados:
+                continue
+            res += distancia
 
-        parent = [-1] * self.adyacencia.size()
+            visitados.add(codigo)
 
-        #para tomar nota de los que ya estan en el arbol
-        en_arbol = [False] * self.adyacencia.size()
+            for vecino, cost_vecino in self.adyacencia[codigo]:
+                if vecino not in visitados:
+                    heapq.heappush(minHeap, [vecino, cost_vecino])
 
-        heapq.heappush(cola, (0, punto_inicio))
-        key[punto_inicio] = 0
+        return res
 
-        while cola:
-                u = heapq.heappop(cola)[1]
+        pass
 
-                if en_arbol[u]:
-                    continue
-                
-                #lo mete al arbol
-                en_arbol[u] = True  
-
-                # NO entendi como se organizo el peso en la lista, hay que cambiar eso
-                for v, peso in self.adyacencia[u]:
-                    # If v is not in MST and the weight of (u, v) is smaller than the current key of v
-                    if not en_arbol[v] and key[v] > peso:
-
-                        key[v] = peso
-                        heapq.heappush(cola, (key[v], v))
-                        parent[v] = u
-
-    #regresa lista de componentes 
-    def lista_componentes(self):
-        num_vectores = len(self.adyacencia)
-        visitados = [False] * num_vectores
-        componentes = []
-
-        for i in range(num_vectores):
-            if not visitados[i]:
-                componente = []
-                dfs(self.adyacencia, visitados, i, componente)
-                componentes.append(componente)
-
-        return componentes
+    
     
     def mst_de_los_componentes(self):
+        componentes = self.lista_componentes()
+        mst_componentes = []
+
+        for componente in componentes:
+            arbol = self.arbol_expansion_minima
         pass

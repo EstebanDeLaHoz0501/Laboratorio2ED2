@@ -3,6 +3,8 @@ import math
 from modelos.Aereopuerto import Aereopuerto
 
 #para manejo mas facil de la lista
+#diccionario, cada entrada es un aeropuerto, la clave es el id, y el valor es una lista de listas que contiene
+#los aeropuertos adjacentes y las distancias
 class lista_adj_airport:
     def __init__ (self, ruta_csv: str):
         self.lista_adj = lista_adyacencia(ruta_csv)
