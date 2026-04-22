@@ -4,6 +4,8 @@ from flights.dataLoader import listaAdyacencia
 from collections import deque
 
 #carga el mapa
+#LOS METODOS DE GRAFOS VAN EN OPERACIONES GRAFO, NO CAMBIE ESTE ARCHIVO PQ HAY FUNCIONES QUE NO ENTIENDO
+#Y NO LAS QUIERO DAÑAR
 aereopuertos = cargar_datos("flights/flights_final.csv")
 adyacencia = listaAdyacencia("flights/flights_final.csv")
 
