@@ -10,8 +10,9 @@ from collections import deque
 class operaciones_grafo:
     def __init__(self, ruta_csv: str):
 
-        self.aereopuertos = lista_adj_aeropuertos.lista_adj_airport(ruta_csv)
-        self.adyacencia = lista_info_aeropuertos.lista_info_airport(ruta_csv)
+        self.adyacencia = lista_adj_aeropuertos.lista_adj_airport(ruta_csv).lista_adj
+        self.aereopuertos = lista_info_aeropuertos.lista_info_airport(ruta_csv).datos
+
 
     #obtiene los ids de los vertices que estan dentro del componente conexo
     def dfs_componentes(self, vertice: int, visitados, ids_componente: list):
@@ -42,18 +43,33 @@ class operaciones_grafo:
         return componentes
 
 
-    def mayor_Comp_Conex(self): 
-            componentes = self.lista_componentes()
-            mayor = []
-            for componente in componentes:
-                if len(componente) > len(mayor):
-                    mayor = componente
+    # def mayor_Comp_Conex(self): 
+    #         componentes = self.lista_componentes()
+    #         mayor = []
+    #         for componente in componentes:
+    #             if len(componente) > len(mayor):
+    #                 mayor = componente
 
-            return mayor
+    #         return mayor
 
-    def es_bipartito(self):
+#   Rescaté la función mayorCompConex del main, debe devolver un diccionario, pues la función bipartito
+#   trabaja sobre listas de adyacencia, y necesita revisar si la mayor componente conexa es
+#   bipartita, la funcion mayorCompConex devuelve la lista de adyacencia de dicha componente
+
+    def mayorCompConex(self):
+        mayor = max(self.componentes_conexas(), key=len)
+        mayorComp = {}
+        for n in mayor:
+            vecinosEnMayor = []
+            for v,p in self.adyacencia[n]:
+                if(v in mayor):
+                    vecinosEnMayor.append((v,p))
+            mayorComp[n]=vecinosEnMayor
+        return mayorComp
+
+    def bipartito(self, adyacencia):
         conjuntos = {}  
-        for nodo in self.adyacencia:
+        for nodo in adyacencia:
             if nodo not in conjuntos:
                 
                 cola = deque([nodo])
@@ -62,7 +78,7 @@ class operaciones_grafo:
                 while cola:
                     actual = cola.popleft()
 
-                    for vecino, i in self.adyacencia[actual]:
+                    for vecino, i in adyacencia[actual]:
                         if vecino not in conjuntos:
                             #asigna el color opuesto
                             conjuntos[vecino] = 1 - conjuntos[actual]
@@ -132,3 +148,48 @@ class operaciones_grafo:
             mst_componentes.append(self.peso_arbol_expansion_minima(componente))
         
         return mst_componentes
+    
+    def Dijkstra(self, Ori):
+        distancias = {nodo:float('inf') for nodo in self.adyacencia}
+        distancias[Ori]=0
+        visitados = set()
+        padre = {nodo:None for nodo in self.adyacencia}
+
+        while len(visitados)<len(self.adyacencia):
+            nodoActual = None
+            menorDistancia = float('inf')
+            for nodo in self.adyacencia:
+                if nodo not in visitados and distancias[nodo]<menorDistancia:
+                    menorDistancia = distancias[nodo]
+                    nodoActual = nodo
+            
+            if nodoActual == None:
+                break
+
+            visitados.add(nodoActual)
+            for vecino, peso in self.adyacencia[nodoActual]:
+                nueva_dist = distancias[nodoActual] + peso
+
+                if nueva_dist < distancias[vecino]:
+                    distancias[vecino] = nueva_dist
+                    padre[vecino] = nodoActual
+
+        return distancias, padre
+    
+    def caminoEntreNodos(self, Ori, Des):
+        distancia, predecesor = self.Dijkstra(Ori)
+        lista = []
+        actual = Des
+        while(actual is not None):
+            lista.append(actual)
+            actual = predecesor[actual]
+
+        listaCoo = []
+        for aero in lista:
+            listaCoo.append((self.aereopuertos[aero].lat,
+                     self.aereopuertos[aero].lon))
+        return distancia[Des], listaCoo, lista
+
+
+
+

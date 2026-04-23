@@ -6,4 +6,6 @@ class Aereopuerto:
         self.country = country
         self.lat = lat
         self.lon = lon
+    def __str__(self):
+        return f"{self.code} - {self.name} ({self.city}, {self.country}) | Coordenadas: ({self.lat}, {self.lon})"
         
