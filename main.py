@@ -5,10 +5,15 @@ from collections import deque
 from controlador.Operaciones_Grafo import operaciones_grafo
 from Mapa.mapa import punto5
 from Mapa.mapa import punto6
-Opgrafo = operaciones_grafo("flights/flights_final.csv")
+from Mapa.mapa import adyacencia
+from Mapa.mapa import Opgrafo
+from punto4 import punto_4
 
-aereopuertos = cargar_datos("flights/flights_final.csv")
-adyacencia = lista_adyacencia("flights/flights_final.csv")
+# Opgrafo = operaciones_grafo("flights/flights_final.csv")
+
+
+# aereopuertos = cargar_datos("flights/flights_final.csv")
+# adyacencia = lista_adyacencia("flights/flights_final.csv")
 listaComponentes = Opgrafo.componentes_conexas()
 
 
@@ -51,13 +56,15 @@ def Menu3():
     print("soy el peso del arbol", Opgrafo.peso_arbol_expansion_minima(adyacencia))
 
 def Menu4():
-    print("idk")
+    print("Ingresa el codigo del aeropuerto de origen")
+    Ori = input("").strip().upper()
+    punto_4(Ori)
 
 def Menu5():
     print("Ingresa el codigo del aeropuerto de origen")
-    Ori = input("")
+    Ori = input("").strip().upper()
     print("Ingresa el codigo del aeropuerto destino")
-    Des = input("")
+    Des = input("").strip().upper()
     if(not punto5(Des,Ori)):
         print("Verifica el codigo de origen y destino")
     else:
@@ -101,7 +108,7 @@ while opcion != "7":
     print("6. Muestre todos los aeropuertos")
     print("7. Salir")
     while True:
-        opcion = input("")
+        opcion = input("").strip().upper()
         if choice(opcion):
                 break
     

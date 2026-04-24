@@ -1,12 +1,13 @@
 import pandas as pd
 from modelos.lista_info_aeropuertos import cargar_datos
 from controlador.Operaciones_Grafo import operaciones_grafo
-
+from Mapa.mapa import aereopuertos
+from Mapa.mapa import Opgrafo
 def punto_4(codigo_buscado):
     # 1. Cargamos la base de datos de aeropuertos y el grafo
     # Usamos las funciones que ya definidas
-    info_aeropuertos = cargar_datos("flights/flights_final.csv")
-    op_grafo = operaciones_grafo("flights/flights_final.csv")
+    info_aeropuertos = aereopuertos
+    op_grafo = Opgrafo
 
     # PARTE 4a: Información del aeropuerto
     # Verificamos que el código existe 
@@ -17,7 +18,7 @@ def punto_4(codigo_buscado):
         print("========================================")
         print(aeropuerto)
     else:
-        print(f"Error: El código {codigo_buscado} no se encuentra en la base de datos.")
+        print("Error: El código ",codigo_buscado," no se encuentra en la base de datos.")
         return
 
     # PARTE 4b: Caminos mínimos más largos (Top 10)
@@ -32,19 +33,28 @@ def punto_4(codigo_buscado):
 
     # Ordenamos el diccionario por distancia de mayor a menor
     # y tomamos los primeros 10 resultados
-    top_10_lejanos = sorted(conectados.items(), key=lambda x: x[1], reverse=True)[:10]
+    #top_10_lejanos = sorted(conectados.items(), key=lambda x: x[1], reverse=True)[:10]
+    top10 = list(conectados.items())
+    for i in range(0, len(top10)):
+        for j in range(i+1, len(top10)):
+            if top10[i][1]>top10[j][1]:
+                aux = top10[i]
+                top10[i] = top10[j]
+                top10[j] = aux
+    top10.reverse()
+    top10 = top10[:10]
 
     print("\n========================================")
-    print("TOP 10 TRAYECTOS MAS LARGOS DESDE EL AEROPUERRTO DE", codigo_buscado)
+    print("TOP 10 TRAYECTOS MAS LARGOS DESDE EL AEROPUERTO DE", codigo_buscado)
     print("========================================")
     
-    for i, (codigo, km) in enumerate(top_10_lejanos, 1):
+    for i, (codigo, km) in enumerate(top10, 1):
         if codigo in info_aeropuertos:
             dest = info_aeropuertos[codigo]
-            print(f"{i}. {dest.name} ({codigo})")
-            print(f"   Ubicación: {dest.city}, {dest.country}")
-            print(f"   Distancia mínima: {km:.2f} km")
-            print(f"   Coordenadas: ({dest.lat}, {dest.lon})")
+            print(i, ".", dest.name, "(", codigo, ")", sep="")
+            print("   Ubicación:", dest.city, ",", dest.country)
+            print("   Distancia mínima:", km, "km")
+            print("   Coordenadas: (", dest.lat, ",", dest.lon, ")", sep="")
             print("-" * 30)
 
 # --- PRUEBA DEL PROGRAMA ---
