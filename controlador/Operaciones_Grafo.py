@@ -107,8 +107,30 @@ class operaciones_grafo:
 
         return resultado
     
-    #creo que esta listo
-    def peso_arbol_expansion_minima(self, lista_adyacencia: dict):
+
+
+    #PUNTO 3
+    #esta funcion es para que sirva el kruskal
+    def get_edges(self):
+
+        aristas = []
+        visitados = set()
+        
+        #al parecer .items() se demora menos que .keys()???? que loquera
+        for vertice, vecinos in self.adyacencia.lista_adj.items():
+            for vecino, distancia in vecinos:
+
+                #organiza los vertices para ver si ya tenemos la arista guardada
+                edge = tuple(sorted([vertice,vecino]))
+                if edge not in visitados:
+                    visitados.add(edge)
+                    aristas.append((distancia, vertice, vecino))
+        #aaam
+        return aristas  # Aristas guardadas como (peso, nodo1, nodo2)
+    
+    #MST, ahora con kruskal
+    
+    '''def peso_arbol_expansion_minima(self, lista_adyacencia: dict):
         
         peso_arbol = 0
         numero_vertices = len(self.adyacencia)
@@ -136,7 +158,7 @@ class operaciones_grafo:
                 if vecino not in visitados:
                     heapq.heappush(minHeap, [vecino, cost_vecino])
 
-        return peso_arbol
+        return peso_arbol'''
 
         
     #regresa el peso de los componentes en una lista en orden de los componentes conexos

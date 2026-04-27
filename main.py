@@ -1,3 +1,4 @@
+# abandon all hope, ye who enter here -luna
 import folium
 from modelos.lista_info_aeropuertos import cargar_datos
 from modelos.lista_adj_aeropuertos import lista_adyacencia
