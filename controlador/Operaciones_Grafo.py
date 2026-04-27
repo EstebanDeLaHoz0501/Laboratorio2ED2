@@ -131,7 +131,7 @@ class operaciones_grafo:
         # Diccionario con todos los las mismas claves, con valories de 0 hasta el tamaño-1
         node_a_idx = {node: i for i, node in enumerate(diccionario_adjacencia.keys())}
 
-        uf = Union_Find(len(node_a_idx))
+        uf = Union_Find.UnionFind(len(node_a_idx))
         
         peso_mst  = 0
         num_visitadas = 0

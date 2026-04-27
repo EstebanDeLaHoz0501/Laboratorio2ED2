@@ -59,11 +59,10 @@ def Menu3():
     if len(peso_componentes) == 1:
         print("El peso del MST es: ")
     else:
-        print("El peso de los componentes, en orden es: ")
+        print("El peso de los componentes, en orden de los componentes es: ")
 
     print(peso_componentes)
         
-    print("soy el peso del arbol", Opgrafo.peso_arbol_expansion_minima(adyacencia))
 
 def Menu4():
     print("Ingresa el codigo del aeropuerto de origen")

@@ -9,7 +9,7 @@ class UnionFind:
     def find(self, objetivo):
 
         root = self.parent[objetivo]
-        if self.parent[ root] !=  root: #si root no es el root de su conjunto ...
+        if self.parent[ root] !=  root: #si root no es el root de su conjunto, se le asigna el papa de root
 
             self.parent[ objetivo] = self.find(root)  
             return self.parent[objetivo]
