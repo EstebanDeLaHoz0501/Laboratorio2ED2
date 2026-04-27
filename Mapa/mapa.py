@@ -13,11 +13,13 @@ cambioParaGrupo = 0
 
 def punto5(Ori, Des):
     if Ori not in adyacencia:
-        return False
+        return 0
     if Des not in adyacencia:
-        return False
-    mapa = folium.Map(location=[0, 0], zoom_start=2)
+        return 0
     distancia, camino, caminoNodos = Opgrafo.caminoEntreNodos(Ori, Des)
+    if distancia == None or camino == None or caminoNodos == None:
+        return 1
+    mapa = folium.Map(location=[0, 0], zoom_start=2)
     grupo = folium.FeatureGroup(name=cambioParaGrupo)
     for nodo in caminoNodos:
         folium.Marker(
@@ -29,7 +31,7 @@ def punto5(Ori, Des):
     folium.PolyLine(camino, tooltip=distancia).add_to(mapa)
     mapa.save("mapa.html")
     webbrowser.open("mapa.html")
-    return True
+    return 2
 
 def punto6():
     mapa = folium.Map(location=[0, 0], zoom_start=2)

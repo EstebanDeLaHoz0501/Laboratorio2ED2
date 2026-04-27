@@ -185,6 +185,8 @@ class operaciones_grafo:
     
     def caminoEntreNodos(self, Ori, Des):
         distancia, predecesor = self.Dijkstra(Ori)
+        if distancia[Des]==float('inf'):
+            return None, None, None
         lista = []
         actual = Des
         while(actual is not None):

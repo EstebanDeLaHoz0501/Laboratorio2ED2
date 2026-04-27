@@ -74,8 +74,10 @@ def Menu5():
     Ori = input("").strip().upper()
     print("Ingresa el codigo del aeropuerto destino")
     Des = input("").strip().upper()
-    if(not punto5(Des,Ori)):
+    if(0 == punto5(Des,Ori)):
         print("Verifica el codigo de origen y destino")
+    elif(1 == punto5(Des,Ori)):
+        print("No existe un camino entre estos aeropuertos")
     else:
         print("Exito!")
 
@@ -112,7 +114,7 @@ while opcion != "7":
     print("1. Verifique si el grafo es conexo")
     print("2. Verifique si el grafo es bipartito")
     print("3. Determine el peso del arbol de expansión minima")
-    print("4. Determine los 10 caminos mas cortos dado un nodo")
+    print("4. Determine los 10 caminos mínimos más largos dado un nodo")
     print("5. Muestre el camino mínimo entre 2 nodos y sus intermedios")
     print("6. Muestre todos los aeropuertos")
     print("7. Salir")

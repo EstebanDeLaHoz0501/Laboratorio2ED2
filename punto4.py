@@ -37,11 +37,11 @@ def punto_4(codigo_buscado):
     top10 = list(conectados.items())
     for i in range(0, len(top10)):
         for j in range(i+1, len(top10)):
-            if top10[i][1]>top10[j][1]:
+            if top10[i][1]<top10[j][1]:
                 aux = top10[i]
                 top10[i] = top10[j]
                 top10[j] = aux
-    top10.reverse()
+   
     top10 = top10[:10]
 
     print("\n========================================")
@@ -59,6 +59,3 @@ def punto_4(codigo_buscado):
 
 # --- PRUEBA DEL PROGRAMA ---
 # Puedes cambiar "CGH" por el código que quieras probar
-if __name__ == "__main__":
-    codigo = input("Ingrese el código del aeropuerto (ej: BOG, BAQ, CGH): ").strip().upper()
-    punto_4(codigo)
