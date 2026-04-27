@@ -4,7 +4,7 @@ from modelos import lista_adj_aeropuertos
 from modelos import lista_info_aeropuertos
 
 from collections import deque
-import Union_Find #para el kruskal
+from controlador import Union_Find #para el kruskal
 
 #puse las funciones aca para no tener todo en el main :/
 
@@ -43,15 +43,6 @@ class operaciones_grafo:
 
         return componentes
 
-
-    # def mayor_Comp_Conex(self): 
-    #         componentes = self.lista_componentes()
-    #         mayor = []
-    #         for componente in componentes:
-    #             if len(componente) > len(mayor):
-    #                 mayor = componente
-
-    #         return mayor
 
 #   Rescaté la función mayorCompConex del main, debe devolver un diccionario, pues la función bipartito
 #   trabaja sobre listas de adyacencia, y necesita revisar si la mayor componente conexa es
@@ -112,13 +103,13 @@ class operaciones_grafo:
     
     #PUNTO 3
     #esta funcion es para que sirva el kruskal
-    def get_aristas(self):
+    def get_aristas(self, diccionario_adjacencia: dict):
 
         aristas = []
         visitados = set()
         
         #al parecer .items() se demora menos que .keys()???? que loquera
-        for vertice, vecinos in self.adyacencia.lista_adj.items():
+        for vertice, vecinos in diccionario_adjacencia.items():
             for vecino, distancia in vecinos:
 
                 #organiza los vertices para ver si ya tenemos la arista guardada
@@ -131,14 +122,14 @@ class operaciones_grafo:
     
     
     #MST, ahora con kruskal
-    def kruskal(self, adj_dict):
+    def kruskal_peso(self, diccionario_adjacencia: dict):
 
 
-        edges = self.get_aristas(self.adyacencia) #lista de tuplas (peso, nodo1, nodo2)
+        edges = self.get_aristas(diccionario_adjacencia) #lista de tuplas (peso, nodo1, nodo2)
         edges.sort(key=lambda x: x[0])  # las sortea por el peso de su index 0 (el peso)
         
         # Diccionario con todos los las mismas claves, con valories de 0 hasta el tamaño-1
-        node_a_idx = {node: i for i, node in enumerate(self.adyacencia.keys())}
+        node_a_idx = {node: i for i, node in enumerate(diccionario_adjacencia.keys())}
 
         uf = Union_Find(len(node_a_idx))
         
@@ -149,7 +140,7 @@ class operaciones_grafo:
             if uf.union(node_a_idx[nodo1], node_a_idx[nodo2]):
                 peso_mst += peso_arista
                 num_visitadas += 1
-                if num_visitadas == len(adj_dict) - 1:
+                if num_visitadas == len(diccionario_adjacencia) - 1:
                     break  # se acabo
         
         return peso_mst
@@ -157,11 +148,11 @@ class operaciones_grafo:
       
     #regresa el peso de los componentes en una lista en orden de los componentes conexos
     def mst_de_los_componentes(self):
-        componentes = self.lista_componentes()
+        componentes = self.componentes_conexas()
         mst_componentes = []
 
         for componente in componentes:
-            mst_componentes.append(self.peso_arbol_expansion_minima(componente))
+            mst_componentes.append(self.kruskal_peso(componente))
         
         return mst_componentes
     

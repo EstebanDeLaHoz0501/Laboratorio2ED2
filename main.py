@@ -54,6 +54,15 @@ def Menu2():
             print("y su mayor componente no es bipartita")
 
 def Menu3():
+    peso_componentes = Opgrafo.mst_de_los_componentes()
+
+    if len(peso_componentes) == 1:
+        print("El peso del MST es: ")
+    else:
+        print("El peso de los componentes, en orden es: ")
+
+    print(peso_componentes)
+        
     print("soy el peso del arbol", Opgrafo.peso_arbol_expansion_minima(adyacencia))
 
 def Menu4():
