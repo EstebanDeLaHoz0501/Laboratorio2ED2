@@ -1,5 +1,5 @@
 class UnionFind:
-    
+    #todo esto es para el MST 
     
     def __init__(self, n:int):
 

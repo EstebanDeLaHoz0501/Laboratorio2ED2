@@ -4,6 +4,7 @@ from modelos import lista_adj_aeropuertos
 from modelos import lista_info_aeropuertos
 
 from collections import deque
+import Union_Find #para el kruskal
 
 #puse las funciones aca para no tener todo en el main :/
 
@@ -108,10 +109,10 @@ class operaciones_grafo:
         return resultado
     
 
-
+    
     #PUNTO 3
     #esta funcion es para que sirva el kruskal
-    def get_edges(self):
+    def get_aristas(self):
 
         aristas = []
         visitados = set()
@@ -128,39 +129,32 @@ class operaciones_grafo:
         #aaam
         return aristas  # Aristas guardadas como (peso, nodo1, nodo2)
     
-    #MST, ahora con kruskal
     
-    '''def peso_arbol_expansion_minima(self, lista_adyacencia: dict):
+    #MST, ahora con kruskal
+    def kruskal(self, adj_dict):
+
+
+        edges = self.get_aristas(self.adyacencia) #lista de tuplas (peso, nodo1, nodo2)
+        edges.sort(key=lambda x: x[0])  # las sortea por el peso de su index 0 (el peso)
         
-        peso_arbol = 0
-        numero_vertices = len(self.adyacencia)
-        visitados = set()
+        # Diccionario con todos los las mismas claves, con valories de 0 hasta el tamaño-1
+        node_a_idx = {node: i for i, node in enumerate(self.adyacencia.keys())}
 
-        primer_clave_lista  = next(iter(lista_adyacencia))
-
-        #[id aeropuerto, distancia]
-        minHeap = [[0,0]]
-
-        #mq no se hayan visitado todos
-        while len(visitados) < numero_vertices:
-            codigo, distancia = heapq.heappop(minHeap)
-
-            #si ya se visito, se salta
-            if codigo in visitados:
-                continue
-
-            peso_arbol += distancia
-
-            visitados.add(codigo)
-
-            #por cada combo [codigo, distancia] en el valor del aeropuerto se meten los que no han pasado
-            for vecino, cost_vecino in self.adyacencia[codigo]:
-                if vecino not in visitados:
-                    heapq.heappush(minHeap, [vecino, cost_vecino])
-
-        return peso_arbol'''
-
+        uf = Union_Find(len(node_a_idx))
         
+        peso_mst  = 0
+        num_visitadas = 0
+        
+        for peso_arista, nodo1, nodo2 in edges: 
+            if uf.union(node_a_idx[nodo1], node_a_idx[nodo2]):
+                peso_mst += peso_arista
+                num_visitadas += 1
+                if num_visitadas == len(adj_dict) - 1:
+                    break  # se acabo
+        
+        return peso_mst
+        
+      
     #regresa el peso de los componentes en una lista en orden de los componentes conexos
     def mst_de_los_componentes(self):
         componentes = self.lista_componentes()
