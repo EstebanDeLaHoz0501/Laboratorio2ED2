@@ -25,6 +25,7 @@ listaComponentes = Opgrafo.componentes_conexas()
 
 
 def Menu1():
+    cont = 1
     if len(listaComponentes) == 0:
         print("El grafo esta vacio")
     elif len(listaComponentes) == 1:
@@ -32,9 +33,10 @@ def Menu1():
     else:
         print("El grafo no es conexo y tiene", len(listaComponentes)
             , "componentes conexas, a continuación la cantidad de vertices"
-            "de cada componente conexa.")
+            " de cada componente conexa.")
         for componente in listaComponentes:
-            print(len(componente))
+            print("Componente:",cont,":",len(componente))
+            cont +=1
 
 def Menu2():
     if len(listaComponentes) == 0:
@@ -59,9 +61,9 @@ def Menu3():
     if len(peso_componentes) == 1:
         print("El peso del MST es: ")
     else:
-        print("El peso de los componentes, en orden de los componentes es: ")
-
-    print(peso_componentes)
+        print("El peso de cada MST es: ")
+        for i, peso_componentes in enumerate(peso_componentes, 1):
+            print("Componente",i,":",peso_componentes)
         
 
 def Menu4():
